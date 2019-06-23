@@ -1,60 +1,77 @@
 import React, { Component } from 'react';
-import { Modal, View } from 'react-native';
+import { Button, Modal, View } from 'react-native';
 import ImageViewer from './built/index';
-
-const images = [
-  {
-    // Simplest usage.
-    // url: "https://avatars2.githubusercontent.com/u/7970947?v=3&s=460",
-    // url:
-    // "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527660246058&di=6f0f1b19cf05a64317cbc5d2b3713d64&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F0112a85874bd24a801219c7729e77d.jpg",
-    // You can pass props to <Image />.
-    props: {
-      // headers: ...
-      source: require('./img.png')
-    },
-    freeHeight: true
-  },
-  {
-    // Simplest usage.
-    // url: "https://avatars2.githubusercontent.com/u/7970947?v=3&s=460",
-    // url:
-    // "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527660246058&di=6f0f1b19cf05a64317cbc5d2b3713d64&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F0112a85874bd24a801219c7729e77d.jpg",
-    // You can pass props to <Image />.
-    props: {
-      // headers: ...
-      source: require('./img.png')
-    },
-    freeHeight: true
-  }
-];
 
 export default class Main extends Component {
   state = {
     index: 0,
-    modalVisible: true
+    modalVisible: false,
+    imageUrls: []
   };
+
+  constructor(props) {
+    super(props);
+
+    this.updateImages = this.updateImages.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateImages();
+
+    setInterval(this.updateImages, 10000);
+  }
+
+  updateImages() {
+    const urls = [
+      'https://images.unsplash.com/photo-1558980394-34764db076b4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2550&q=80',
+      'https://images.unsplash.com/photo-1560252118-b3ea5bc51cd1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+      'https://images.unsplash.com/photo-1561114475-ba52bf97e1bd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+      'https://images.unsplash.com/photo-1561102397-29b7492fa759?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=935&q=80',
+      'https://images.unsplash.com/photo-1561180851-b7f0383a6c33?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2550&q=80',
+      'https://images.unsplash.com/photo-1561023435-76d23e8ff6de?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1300&q=80',
+      'https://images.unsplash.com/photo-1561175102-9e541a675233?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'
+    ];
+
+    const numImages = Math.floor(Math.random() * (urls.length - 2)) + 2;
+    const imageUrls = [];
+    for (let i = 0; i < numImages; i++) {
+      const url = urls[Math.floor(Math.random() * urls.length)];
+      imageUrls.push({ url });
+    }
+
+    console.warn('Updating images');
+
+    const index = this.state.index > numImages - 1 ? numImages - 1 : this.state.index;
+    this.setState({ index, imageUrls });
+  }
 
   render() {
     return (
       <View
         style={{
+          backgroundColor: 'white',
+          flex: 1,
+          justifyContent: 'center',
           padding: 10
         }}
       >
+        <Button title="Open" onPress={() => this.setState({ modalVisible: true })} />
         <Modal
           visible={this.state.modalVisible}
           transparent={true}
           onRequestClose={() => this.setState({ modalVisible: false })}
         >
           <ImageViewer
-            imageUrls={images}
+            imageUrls={this.state.imageUrls}
             index={this.state.index}
-            onSwipeDown={() => {
-              console.log('onSwipeDown');
-            }}
-            onMove={data => console.log(data)}
+            onChange={index => this.setState({ index })}
+            pageAnimateTime={150}
+            enablePreload={true}
             enableSwipeDown={true}
+            swipeDownThreshold={50}
+            onSwipeDown={() => this.setState({ modalVisible: false })}
+            enableSwipeDown={true}
+            saveToLocalByLongPress={false}
           />
         </Modal>
       </View>
