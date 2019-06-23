@@ -53,6 +53,35 @@ export default class ImageViewer extends React.Component<Props, State> {
   }
 
   public componentWillReceiveProps(nextProps: Props) {
+    // Set new images as not-loaded.
+    this.props.imageUrls.forEach((image, index) => {
+      if (nextProps.imageUrls[index] !== image) {
+        this.loadedIndex.delete(index);
+      }
+    });
+
+    // Reset images sizes.
+    const imageSizes: IImageSize[] = [];
+    nextProps.imageUrls.forEach((image, index) => {
+      if (this.props.imageUrls[index] !== image) {
+        imageSizes.push({
+          width: image.width || 0,
+          height: image.height || 0,
+          status: 'loading'
+        });
+      } else {
+        imageSizes.push(this.state.imageSizes![index]);
+      }
+    });
+
+    this.setState({ imageSizes }, () => {
+      // If image currently being shown changed, reload it.
+      if (nextProps.index === this.state.currentShowIndex && !this.loadedIndex.has(this.state.currentShowIndex!)) {
+        this.loadImage(this.state.currentShowIndex!);
+      }
+    });
+
+    // Update current index.
     if (nextProps.index !== this.state.currentShowIndex) {
       this.setState(
         {
