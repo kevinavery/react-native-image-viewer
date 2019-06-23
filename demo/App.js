@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Modal, TouchableNativeFeedback, Text } from 'react-native';
+import { Modal, View } from 'react-native';
 import ImageViewer from './built/index';
 
 const images = [
