@@ -330,9 +330,10 @@ export default class ImageViewer extends React.Component<Props, State> {
       ? this.standardPositionX + this.width
       : this.standardPositionX - this.width;
     this.standardPositionX = this.positionXNumber;
-    Animated.timing(this.positionX, {
+    Animated.spring(this.positionX, {
       toValue: this.positionXNumber,
-      duration: this.props.pageAnimateTime
+      friction: 10,
+      tension: 50
     }).start();
 
     const nextIndex = (this.state.currentShowIndex || 0) - 1;
@@ -363,9 +364,10 @@ export default class ImageViewer extends React.Component<Props, State> {
       ? this.standardPositionX - this.width
       : this.standardPositionX + this.width;
     this.standardPositionX = this.positionXNumber;
-    Animated.timing(this.positionX, {
+    Animated.spring(this.positionX, {
       toValue: this.positionXNumber,
-      duration: this.props.pageAnimateTime
+      friction: 10,
+      tension: 50
     }).start();
 
     const nextIndex = (this.state.currentShowIndex || 0) + 1;
@@ -387,9 +389,10 @@ export default class ImageViewer extends React.Component<Props, State> {
    */
   public resetPosition() {
     this.positionXNumber = this.standardPositionX;
-    Animated.timing(this.positionX, {
+    Animated.spring(this.positionX, {
       toValue: this.standardPositionX,
-      duration: 150
+      friction: 10,
+      tension: 50
     }).start();
   }
 
