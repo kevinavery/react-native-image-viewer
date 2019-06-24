@@ -10,6 +10,10 @@ interface IOnMove {
   zoomCurrentDistance: number;
 }
 
+interface IOnSwipingDown {
+  offset: number;
+}
+
 export class Props {
   /**
    * 是否显示
@@ -184,6 +188,13 @@ export class Props {
    * 取消看图的回调
    */
   public onCancel?: () => void = () => {
+    //
+  };
+
+  /**
+   * If provided, this will be called while swiping down
+   */
+  public onSwipingDown?: (position?: IOnSwipingDown) => void = () => {
     //
   };
 
