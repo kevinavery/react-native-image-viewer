@@ -18,7 +18,7 @@ export default class Main extends Component {
   componentDidMount() {
     this.updateImages();
 
-    setInterval(this.updateImages, 10000);
+    //setInterval(this.updateImages, 10000);
   }
 
   updateImages() {
@@ -38,8 +38,6 @@ export default class Main extends Component {
       const url = urls[Math.floor(Math.random() * urls.length)];
       imageUrls.push({ url });
     }
-
-    console.warn('Updating images');
 
     const index = this.state.index > numImages - 1 ? numImages - 1 : this.state.index;
     this.setState({ index, imageUrls });
