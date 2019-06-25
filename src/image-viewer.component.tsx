@@ -62,8 +62,10 @@ export default class ImageViewer extends React.Component<Props, State> {
 
     // Reset images sizes.
     const imageSizes: IImageSize[] = [];
+    let newImageFound = false;
     nextProps.imageUrls.forEach((image, index) => {
       if (this.props.imageUrls[index] !== image) {
+        newImageFound = true;
         imageSizes.push({
           width: image.width || 0,
           height: image.height || 0,
@@ -74,12 +76,15 @@ export default class ImageViewer extends React.Component<Props, State> {
       }
     });
 
-    this.setState({ imageSizes }, () => {
-      // If image currently being shown changed, reload it.
-      if (nextProps.index === this.state.currentShowIndex && !this.loadedIndex.has(this.state.currentShowIndex!)) {
-        this.loadImage(this.state.currentShowIndex!);
-      }
-    });
+    // Only update this state if new image was found, otherwise screen flickers sometimes.
+    if (newImageFound) {
+      this.setState({ imageSizes }, () => {
+        // If image currently being shown changed, reload it.
+        if (nextProps.index === this.state.currentShowIndex && !this.loadedIndex.has(this.state.currentShowIndex!)) {
+          this.loadImage(this.state.currentShowIndex!);
+        }
+      });
+    }
 
     // Update current index.
     if (nextProps.index !== this.state.currentShowIndex) {
@@ -92,12 +97,6 @@ export default class ImageViewer extends React.Component<Props, State> {
           this.loadImage(nextProps.index || 0);
 
           this.jumpToCurrentImage();
-
-          // 显示动画
-          Animated.timing(this.fadeAnim, {
-            toValue: 1,
-            duration: 200
-          }).start();
         }
       );
     }
@@ -614,7 +613,7 @@ export default class ImageViewer extends React.Component<Props, State> {
 
     return (
       <Animated.View style={{ zIndex: 9 }}>
-        <Animated.View style={{ ...this.styles.container, opacity: this.fadeAnim }}>
+        <Animated.View style={{ ...this.styles.container }}>
           {this!.props!.renderHeader!(this.state.currentShowIndex)}
 
           <View style={this.styles.arrowLeftContainer}>
