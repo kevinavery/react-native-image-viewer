@@ -18,6 +18,8 @@
   "author": "ascoders",
   "license": "MIT",
   "dependencies": {
+    "@types/lodash": "^4.14.134",
+    "lodash": "^4.17.11",
     "react-native-image-pan-zoom": "github:kevinavery/react-native-image-zoom#7666549"
   },
   "peerDependencies": {
