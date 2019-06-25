@@ -16,7 +16,6 @@ import {
   ViewStyle
 } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
-import { isEqual } from 'lodash';
 import styles from './image-viewer.style';
 import { IImageInfo, IImageSize, Props, State } from './image-viewer.type';
 
@@ -56,7 +55,7 @@ export default class ImageViewer extends React.Component<Props, State> {
   public componentWillReceiveProps(nextProps: Props) {
     // Set new images as not-loaded.
     this.props.imageUrls.forEach((image, index) => {
-      if (!isEqual(nextProps.imageUrls[index], image)) {
+      if (nextProps.imageUrls[index].url !== image.url) {
         this.loadedIndex.delete(index);
       }
     });
@@ -65,7 +64,7 @@ export default class ImageViewer extends React.Component<Props, State> {
     const imageSizes: IImageSize[] = [];
     let newImageFound = false;
     nextProps.imageUrls.forEach((image, index) => {
-      if (!isEqual(this.props.imageUrls[index], image)) {
+      if (this.props.imageUrls[index].url !== image.url) {
         newImageFound = true;
         imageSizes.push({
           width: image.width || 0,
